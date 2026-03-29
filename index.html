@@ -3,99 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Instagram</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Instagram + Chat</title>
     <style>
-        :root { --ig-bg: #fafafa; --ig-white: #ffffff; --ig-black: #262626; --ig-blue: #0095f6; --ig-gray: #8e8e8e; --ig-border: #dbdbdb; --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: var(--ig-bg); font-family: var(--font-stack); overflow-x: hidden; }
+        :root { --ig-bg: #fafafa; --ig-white: #ffffff; --ig-blue: #0095f6; --ig-border: #dbdbdb; --ig-black: #262626; --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background: var(--ig-bg); font-family: var(--font-stack); overflow-x:hidden; }
 
-        /* --- AUTH EKRANI --- */
-        #auth-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 1000; display: flex; justify-content: center; align-items: center; }
-        .auth-box { width: 100%; max-width: 350px; padding: 30px; text-align: center; }
-        .logo-text { font-size: 3.5rem; font-weight: 500; margin-bottom: 30px; letter-spacing: -2px; }
-        input { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid var(--ig-border); border-radius: 4px; background: #fafafa; font-size: 0.8rem; }
-        .btn-blue { width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--ig-blue); color: white; font-weight: 700; cursor: pointer; margin-top: 15px; }
+        /* --- LOGIN --- */
+        #login-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:2000; display:flex; justify-content:center; align-items:center; }
+        .login-box { width:90%; max-width:350px; text-align:center; }
+        .logo-main { font-size:3.5rem; margin-bottom:30px; font-weight:500; letter-spacing:-2px; }
+        .u-input { width:100%; padding:14px; border:1px solid var(--ig-border); border-radius:8px; margin-bottom:15px; font-size:1rem; }
+        .btn-start { width:100%; padding:14px; background:var(--ig-blue); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer; }
 
-        /* --- MAIN APP --- */
-        #main-app { display: none; padding-top: 60px; padding-bottom: 60px; }
-        .header { position: fixed; top: 0; width: 100%; height: 60px; background: white; border-bottom: 1px solid var(--ig-border); display: flex; justify-content: space-between; align-items: center; padding: 0 16px; z-index: 500; }
-        .header .logo { font-size: 1.6rem; font-weight: 700; }
-        .h-icons img { width: 24px; margin-left: 20px; }
+        /* --- APP STRUCTURE --- */
+        #app { display:none; }
+        .header { position:fixed; top:0; width:100%; height:60px; background:white; border-bottom:1px solid var(--ig-border); display:flex; justify-content:space-between; align-items:center; padding:0 20px; z-index:1000; }
+        .header .logo { font-size:1.6rem; font-weight:700; }
+        .content { margin-top:60px; margin-bottom:60px; }
 
-        /* --- STORIES --- */
-        .stories { height: 110px; background: white; border-bottom: 1px solid var(--ig-border); display: flex; align-items: center; padding: 0 10px; gap: 15px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .stories::-webkit-scrollbar { display: none; }
-        .story { min-width: 75px; text-align: center; }
-        .s-circle { width: 68px; height: 68px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #bc1888); margin: 0 auto 5px; }
-        .s-circle img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid white; object-fit: cover; }
-        .story p { font-size: 0.7rem; color: #262626; overflow: hidden; text-overflow: ellipsis; }
+        /* --- BLOG (FEED) --- */
+        #blog-page .post { background:white; border-bottom:1px solid var(--ig-border); margin-bottom:10px; }
+        .p-header { display:flex; align-items:center; padding:12px 16px; gap:12px; font-weight:600; font-size:0.9rem; }
+        .p-header img { width:32px; height:32px; border-radius:50%; }
+        .p-img img { width:100%; display:block; }
+        .p-info { padding:12px 16px; font-size:0.9rem; }
 
-        /* --- FEED --- */
-        .post { background: white; margin-bottom: 1px; border-bottom: 1px solid var(--ig-border); }
-        .p-header { display: flex; align-items: center; padding: 12px; justify-content: space-between; }
-        .p-user { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.9rem; }
-        .p-user img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
-        .p-img img { width: 100%; display: block; }
-        .p-actions { display: flex; justify-content: space-between; padding: 15px; }
-        .p-actions .left img { width: 26px; margin-right: 15px; }
-        .p-info { padding: 0 15px 15px; font-size: 0.9rem; }
-        .p-likes { font-weight: 700; margin-bottom: 5px; }
+        /* --- CHAT PAGE --- */
+        #chat-page { height:calc(100vh - 120px); display:flex; flex-direction:column; padding:10px; background:#f0f2f5; }
+        .messages-container { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px; margin-bottom:10px; }
+        .msg { max-width:80%; padding:10px 14px; border-radius:18px; font-size:0.9rem; line-height:1.4; }
+        .msg.me { align-self:flex-end; background:var(--ig-blue); color:white; border-bottom-right-radius:4px; }
+        .msg.other { align-self:flex-start; background:white; border-bottom-left-radius:4px; border:1px solid #ddd; }
+        .msg b { font-size:0.75rem; display:block; margin-bottom:3px; opacity:0.8; }
+        .chat-input-area { display:flex; gap:10px; background:white; padding:10px; border-radius:25px; border:1px solid var(--ig-border); }
+        .chat-input { flex:1; border:none; outline:none; font-size:0.9rem; }
+        .btn-send { background:none; border:none; color:var(--ig-blue); font-weight:700; cursor:pointer; }
 
-        /* --- NAV --- */
-        .nav { position: fixed; bottom: 0; width: 100%; height: 55px; background: white; border-top: 1px solid var(--ig-border); display: flex; justify-content: space-around; align-items: center; z-index: 500; }
-        .nav img { width: 26px; }
-        .profile-nav { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
+        /* --- BOTTOM NAV --- */
+        .bottom-nav { position:fixed; bottom:0; width:100%; height:60px; background:white; border-top:1px solid var(--ig-border); display:flex; justify-content:space-around; align-items:center; z-index:1000; }
+        .nav-tab { background:none; border:none; font-size:0.8rem; font-weight:600; color:var(--ig-gray); cursor:pointer; text-align:center; }
+        .nav-tab.active { color:var(--ig-black); }
+        .nav-tab img { width:24px; display:block; margin:0 auto 4px; }
+
+        /* --- MODAL (UPLOAD) --- */
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:3000; justify-content:center; align-items:center; }
+        .modal-box { width:90%; max-width:400px; background:white; padding:25px; border-radius:12px; }
+        .modal-box h3 { margin-bottom:15px; }
+
+        .hidden { display:none !important; }
     </style>
 </head>
 <body>
 
     <!-- GİRİŞ EKRANI -->
-    <div id="auth-screen">
-        <div class="auth-box">
-            <div class="logo-text">Instagram</div>
-            <div id="login-form">
-                <input type="email" id="email" placeholder="E-posta">
-                <input type="password" id="pass" placeholder="Şifre">
-                <button class="btn-blue" id="btn-login">Giriş Yap</button>
-            </div>
+    <div id="login-screen">
+        <div class="login-box">
+            <div class="logo-main">Instagram</div>
+            <input type="text" id="username-input" class="u-input" placeholder="Kullanıcı Adın">
+            <button id="btn-start" class="btn-start">Uygulamaya Başla</button>
+            <p style="margin-top:15px; font-size:0.8rem; color:#8e8e8e;">Hızlı ve şifresiz giriş</p>
         </div>
     </div>
 
     <!-- ANA UYGULAMA -->
-    <div id="main-app">
-        <div class="header">
+    <div id="app">
+        <header class="header">
             <div class="logo">Instagram</div>
-            <div class="h-icons">
-                <img src="https://img.icons8.com/material-outlined/24/000000/plus-2-math.png">
-                <img src="https://img.icons8.com/material-outlined/24/000000/like.png">
-                <img src="https://img.icons8.com/material-outlined/24/000000/sent.png">
+            <div id="btn-show-upload" style="cursor:pointer; font-size:1.5rem;">📷</div>
+        </header>
+
+        <div class="content">
+            <!-- BLOG SAYFASI -->
+            <div id="blog-page">
+                <div id="post-list"></div>
+            </div>
+
+            <!-- SOHBET SAYFASI -->
+            <div id="chat-page" class="hidden">
+                <div class="messages-container" id="chat-messages"></div>
+                <div class="chat-input-area">
+                    <input type="text" id="msg-input" class="chat-input" placeholder="Mesaj yaz...">
+                    <button id="btn-msg-send" class="btn-send">Gönder</button>
+                </div>
             </div>
         </div>
 
-        <div class="stories" id="story-row">
-            <!-- Hikayeler buraya eklenecek -->
-        </div>
+        <nav class="bottom-nav">
+            <button class="nav-tab active" onclick="showTab('blog')"><img src="https://img.icons8.com/ios-filled/50/000000/home.png">Akış</button>
+            <button class="nav-tab" onclick="showTab('chat')"><img src="https://img.icons8.com/ios-filled/50/000000/speech-bubble.png">Sohbet</button>
+            <button class="nav-tab" id="logout-btn"><img src="https://img.icons8.com/ios-filled/50/000000/exit.png">Çıkış</button>
+        </nav>
+    </div>
 
-        <div id="post-feed">
-             <!-- Gönderiler buraya eklenecek -->
-        </div>
-
-        <div class="nav">
-            <img src="https://img.icons8.com/material/24/000000/home--v1.png">
-            <img src="https://img.icons8.com/material-outlined/24/000000/search--v1.png">
-            <img src="https://img.icons8.com/material-outlined/24/000000/video-playlist.png">
-            <img src="https://img.icons8.com/material-outlined/24/000000/shopping-bag.png">
-            <img src="https://i.pravatar.cc/150?u=me" class="profile-nav" id="logout-btn">
+    <!-- BLOG PAYLAŞMA MODALI -->
+    <div id="upload-modal" class="modal">
+        <div class="modal-box">
+            <h3>Yeni Blog Yazısı</h3>
+            <input type="text" id="up-img-url" placeholder="Görsel Linki (URL)" class="u-input">
+            <input type="text" id="up-caption" placeholder="Açıklama (Blog Metni)" class="u-input">
+            <button id="btn-publish" class="btn-start">Paylaş</button>
+            <button onclick="closeModal()" style="width:100%; margin-top:10px; background:none; border:none; color:red; cursor:pointer;">İptal</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase Ayarların
+        // Firebase Yapılandırman
         const firebaseConfig = {
             apiKey: "AIzaSyBIK0LHEqw6gEi6fwWER4i6HK9Aoxr4ECk",
             authDomain: "emirinsta.firebaseapp.com",
@@ -105,80 +122,133 @@
             appId: "1:1054133758624:web:a7ec89a1e9cf350aafb7c5"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        const fbApp = initializeApp(firebaseConfig);
+        const auth = getAuth(fbApp);
+        const db = getFirestore(fbApp);
 
-        // BENİ HATIRLA (Hafıza Ayarı)
-        setPersistence(auth, browserLocalPersistence);
+        let myName = localStorage.getItem('fb_insta_name');
 
-        const authScreen = document.getElementById('auth-screen');
-        const mainApp = document.getElementById('main-app');
-
-        // GİRİŞ YAP
-        document.getElementById('btn-login').onclick = () => {
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('pass').value;
-            signInWithEmailAndPassword(auth, e, p).catch(err => alert("Hata: " + err.message));
+        // GİRİŞ MANTIĞI
+        document.getElementById('btn-start').onclick = async () => {
+            const nameInput = document.getElementById('username-input').value.trim();
+            if (!nameInput) return alert("Hoppala! Kullanıcı adı yazmadın.");
+            
+            myName = nameInput;
+            localStorage.setItem('fb_insta_name', nameInput);
+            
+            try {
+                await signInAnonymously(auth);
+            } catch (e) { alert("Firebase Hatası: Anonim Giriş kapalı mı? (Konsoldan açın)"); }
         };
 
-        // OTURUM KONTROL
         onAuthStateChanged(auth, (user) => {
-            if (user) {
-                authScreen.style.display = 'none';
-                mainApp.style.display = 'block';
-                loadContent();
+            if (user && myName) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                initApp();
             } else {
-                authScreen.style.display = 'flex';
-                mainApp.style.display = 'none';
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('app').style.display = 'none';
             }
         });
 
-        // İÇERİK YÜKLE
-        function loadContent() {
-            // Hikayeler (Sahte Veri)
-            const stories = ["senin_hikayen", "emre_dev", "ayse_g", "yasin_34", "tech_news"];
-            const row = document.getElementById('story-row');
-            row.innerHTML = stories.map((s, i) => `
-                <div class="story">
-                    <div class="s-circle"><img src="https://i.pravatar.cc/150?u=${i}"></div>
-                    <p>${s}</p>
-                </div>
-            `).join('');
+        function initApp() {
+            loadBlog();
+            loadChat();
+        }
 
-            // Gönderiler (Firestore'dan)
-            onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "desc")), (snap) => {
-                const feed = document.getElementById('post-feed');
-                feed.innerHTML = '';
+        // --- BLOG (AKIŞ) ---
+        function loadBlog() {
+            const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
+            onSnapshot(q, (snap) => {
+                const list = document.getElementById('post-list');
+                list.innerHTML = '';
                 snap.forEach(doc => {
                     const d = doc.data();
-                    feed.innerHTML += `
+                    list.innerHTML += `
                         <div class="post">
                             <div class="p-header">
-                                <div class="p-user"><img src="https://i.pravatar.cc/150?u=${d.username}"> <span>${d.username}</span></div>
-                                <img src="https://img.icons8.com/material-outlined/24/000000/more.png" style="width:20px">
+                                <img src="https://i.pravatar.cc/150?u=${d.username}"> <span>${d.username}</span>
                             </div>
-                            <div class="p-img"><img src="${d.imageUrl}"></div>
-                            <div class="p-actions">
-                                <div class="left">
-                                    <img src="https://img.icons8.com/material-outlined/26/000000/like.png">
-                                    <img src="https://img.icons8.com/material-outlined/26/000000/speech-bubble.png">
-                                    <img src="https://img.icons8.com/material-outlined/26/000000/sent.png">
-                                </div>
-                                <img src="https://img.icons8.com/material-outlined/26/000000/bookmark-ribbon.png">
-                            </div>
-                            <div class="p-info">
-                                <div class="p-likes">1.250 beğenme</div>
-                                <p><b>${d.username}</b> ${d.caption}</p>
-                            </div>
+                            ${d.imageUrl ? `<div class="p-img"><img src="${d.imageUrl}"></div>` : ''}
+                            <div class="p-info"><b>${d.username}</b> ${d.caption}</div>
                         </div>
                     `;
                 });
             });
         }
 
-        // Çıkış (Profil Resmine Basınca)
-        document.getElementById('logout-btn').onclick = () => { if(confirm("Çıkış yap?")) signOut(auth); };
+        // --- SOHBET (CHAT) ---
+        function loadChat() {
+            const q = query(collection(db, "messages"), orderBy("timestamp", "desc"), limit(50));
+            onSnapshot(q, (snap) => {
+                const chatBox = document.getElementById('chat-messages');
+                chatBox.innerHTML = '';
+                let messages = [];
+                snap.forEach(doc => messages.unshift(doc.data())); // En yeniler aşağı
+                
+                messages.forEach(m => {
+                    const isMe = m.username === myName;
+                    chatBox.innerHTML += `
+                        <div class="msg ${isMe ? 'me':'other'}">
+                            <b>${m.username}</b>
+                            <div>${m.text}</div>
+                        </div>
+                    `;
+                });
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+        }
+
+        // MESAJ GÖNDER
+        document.getElementById('btn-msg-send').onclick = () => {
+            const txt = document.getElementById('msg-input').value;
+            if(!txt) return;
+            addDoc(collection(db, "messages"), {
+                text: txt,
+                username: myName,
+                timestamp: serverTimestamp()
+            });
+            document.getElementById('msg-input').value = '';
+        };
+
+        // BLOG PAYLAŞ
+        document.getElementById('btn-publish').onclick = () => {
+            const url = document.getElementById('up-img-url').value;
+            const caption = document.getElementById('up-caption').value;
+            if(!caption) return alert("Açıklama boş olamaz.");
+
+            addDoc(collection(db, "posts"), {
+                caption: caption,
+                imageUrl: url,
+                username: myName,
+                timestamp: serverTimestamp()
+            });
+            closeModal();
+            document.getElementById('up-img-url').value = '';
+            document.getElementById('up-caption').value = '';
+        };
+
+        // TAB SİSTEMİ
+        window.showTab = function(tab) {
+            document.getElementById('blog-page').classList.add('hidden');
+            document.getElementById('chat-page').classList.add('hidden');
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+            if (tab === 'blog') {
+                document.getElementById('blog-page').classList.remove('hidden');
+                event.currentTarget.classList.add('active');
+            } else {
+                document.getElementById('chat-page').classList.remove('hidden');
+                event.currentTarget.classList.add('active');
+            }
+        };
+
+        // MODAL FONKSİYONLARI
+        document.getElementById('btn-show-upload').onclick = () => document.getElementById('upload-modal').style.display='flex';
+        window.closeModal = () => document.getElementById('upload-modal').style.display='none';
+        document.getElementById('logout-btn').onclick = () => { if(confirm("Çıkış yap?")) { signOut(auth); localStorage.removeItem('fb_insta_name'); } };
+
     </script>
 </body>
 </html>
