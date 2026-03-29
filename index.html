@@ -2,66 +2,160 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Süper Hızlı Emirinsta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Emirinsta Premium</title>
     <style>
-        :root { --ig-bg: #fafafa; --ig-blue: #0095f6; --ig-border: #dbdbdb; }
-        * { margin:0; padding:0; box-sizing:border-box; font-family: sans-serif; }
-        body { background: var(--ig-bg); }
-        .header { position:fixed; top:0; width:100%; height:50px; background:white; border-bottom:1px solid #dbdbdb; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.2rem; z-index:1000; }
-        .nav { position:fixed; bottom:0; width:100%; height:50px; background:white; border-top:1px solid #dbdbdb; display:flex; justify-content:space-around; align-items:center; }
-        .content { margin-top:60px; margin-bottom:60px; padding:10px; }
-        .msg { background:white; padding:10px; border-radius:10px; margin-bottom:5px; border:1px solid #eee; }
-        .msg b { color:var(--ig-blue); display:block; font-size:0.8rem; }
-        .input-area { display:flex; gap:5px; margin-top:10px; }
-        input { flex:1; padding:10px; border:1px solid #dbdbdb; border-radius:5px; }
-        button { padding:10px 20px; background:var(--ig-blue); color:white; border:none; border-radius:5px; font-weight:bold; }
-        .post-card { background:white; border:1px solid #dbdbdb; margin-bottom:15px; border-radius:8px; overflow:hidden; }
-        .post-card img { width:100%; display:block; max-height:300px; object-fit:cover; }
-        .hidden { display:none; }
+        /* --- PREMIUM CSS DEĞİŞKENLERİ --- */
+        :root {
+            --bg: #fafafa; --card: #ffffff; --text: #262626; --border: #dbdbdb;
+            --blue: #0095f6; --gray: #8e8e8e; --nav-bg: rgba(255, 255, 255, 0.8);
+            --glass: blur(10px); --shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        [data-theme="dark"] {
+            --bg: #121212; --card: #1e1e1e; --text: #f0f0f0; --border: #333333;
+            --nav-bg: rgba(18, 18, 18, 0.8); --shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; transition: background 0.3s, color 0.3s; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, system-ui, sans-serif; overflow-x:hidden; }
+
+        /* --- GİRİŞ EKRANI (PREMIUM) --- */
+        #login-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:5000; display:flex; justify-content:center; align-items:center; }
+        .login-card { width:90%; max-width:350px; text-align:center; padding:40px; background:var(--card); border-radius:24px; box-shadow: var(--shadow); border:1px solid var(--border); }
+        .logo-font { font-size:3rem; font-weight:700; margin-bottom:30px; letter-spacing:-2px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        input { width:100%; padding:14px; background:var(--bg); border:1px solid var(--border); border-radius:12px; color:var(--text); margin-bottom:15px; font-size:1rem; outline:none; }
+        .btn-gold { width:100%; padding:14px; background:var(--blue); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer; font-size:1rem; box-shadow: 0 4px 15px rgba(0, 149, 246, 0.3); }
+
+        /* --- ANA YAPI --- */
+        header { position:fixed; top:0; width:100%; height:65px; background:var(--nav-bg); backdrop-filter:var(--glass); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; padding:0 20px; z-index:1000; }
+        .header-logo { font-size:1.6rem; font-weight:800; }
+        .content { margin-top:65px; margin-bottom:70px; }
+
+        /* --- HİKAYELER --- */
+        .stories { padding:15px 10px; display:flex; gap:15px; overflow-x:auto; border-bottom:1px solid var(--border); }
+        .stories::-webkit-scrollbar { display:none; }
+        .s-box { display:flex; flex-direction:column; align-items:center; min-width:75px; }
+        .s-ring { width:68px; height:68px; border-radius:50%; padding:3px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); margin-bottom:5px; transition: transform 0.2s; }
+        .s-ring:active { transform: scale(0.9); }
+        .s-ring img { width:100%; height:100%; border-radius:50%; border:2px solid var(--bg); object-fit:cover; }
+        .s-box p { font-size:0.75rem; color:var(--gray); }
+
+        /* --- AKIŞ (POSTS) --- */
+        .post { background:var(--card); margin-bottom:15px; border-bottom:1px solid var(--border); }
+        .p-head { display:flex; align-items:center; padding:12px; gap:12px; font-weight:600; }
+        .p-head img { width:34px; height:34px; border-radius:50%; border:1px solid var(--border); }
+        .p-img img { width:100%; display:block; background: #eee; min-height:300px; }
+        .p-acts { padding:15px; display:flex; justify-content:space-between; font-size:1.5rem; }
+        .p-info { padding:0 15px 15px; font-size:0.95rem; }
+
+        /* --- SOHBET --- */
+        #chat-view { height:calc(100vh - 135px); display:flex; flex-direction:column; background:var(--bg); }
+        .msgs { flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:12px; }
+        .bubble { max-width:80%; padding:12px 16px; border-radius:20px; position:relative; font-size:0.95rem; box-shadow: var(--shadow); }
+        .bubble.me { align-self:flex-end; background:var(--blue); color:white; border-bottom-right-radius:4px; }
+        .bubble.other { align-self:flex-start; background:var(--card); color:var(--text); border-bottom-left-radius:4px; border:1px solid var(--border); }
+        .bubble small { display:block; font-size:0.7rem; margin-bottom:4px; opacity:0.8; }
+        .chat-bar { padding:15px; background:var(--card); border-top:1px solid var(--border); display:flex; gap:10px; }
+
+        /* --- PROFİL --- */
+        #profile-view { padding:30px 20px; text-align:center; }
+        .p-avatar { width:100px; height:100px; border-radius:50%; border:3px solid var(--blue); margin-bottom:15px; }
+        .p-stats { display:flex; justify-content:center; gap:30px; margin:20px 0; }
+        .p-stats div { display:flex; flex-direction:column; }
+        .p-stats b { font-size:1.2rem; }
+
+        /* --- NAV BAR --- */
+        .nav-bar { position:fixed; bottom:0; width:100%; height:65px; background:var(--nav-bg); backdrop-filter:var(--glass); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; z-index:1000; }
+        .nav-tab { background:none; border:none; color:var(--text); cursor:pointer; font-size:1.5rem; display:flex; flex-direction:column; align-items:center; gap:4px; text-decoration:none; }
+        .nav-tab span { font-size:0.7rem; font-weight:600; color:var(--gray); }
+        .nav-tab.active { color:var(--blue); }
+
+        /* --- MODAL --- */
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.65); backdrop-filter:blur(5px); z-index:6000; justify-content:center; align-items:center; }
+        .modal-body { width:90%; max-width:400px; background:var(--card); padding:30px; border-radius:24px; }
+
+        .hidden { display:none !important; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fade { animation: fadeIn 0.4s; }
     </style>
 </head>
-<body>
+<body data-theme="light">
 
-    <!-- GİRİŞ -->
-    <div id="login-zone" style="height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-        <h1 style="margin-bottom:20px;">Emirinsta</h1>
-        <input type="text" id="user-name" placeholder="Kullanıcı Adın" style="width:250px; margin-bottom:10px;">
-        <button onclick="startApp()">Başla</button>
-    </div>
-
-    <!-- ANA UYGULAMA -->
-    <div id="app-zone" class="hidden">
-        <div class="header">Emirinsta</div>
-        
-        <div class="content" id="chat-tab">
-            <h3 style="margin-bottom:10px;">Global Sohbet</h3>
-            <div id="chat-logs" style="height:300px; overflow-y:auto; margin-bottom:10px; display:flex; flex-direction:column;"></div>
-            <div class="input-area">
-                <input type="text" id="chat-input" placeholder="Bir şeyler yaz...">
-                <button onclick="sendMsg()">Gönder</button>
-            </div>
-        </div>
-
-        <div class="content hidden" id="blog-tab">
-            <button onclick="document.getElementById('post-modal').classList.toggle('hidden')" style="width:100%; margin-bottom:20px;">+ Paylaşım Yap</button>
-            <div id="post-modal" class="hidden" style="background:#eee; padding:10px; margin-bottom:20px; border-radius:10px;">
-                <input type="text" id="blog-img" placeholder="Resim Linki (Opsiyonel)" style="margin-bottom:5px; width:100%;">
-                <input type="text" id="blog-txt" placeholder="Düşüncelerin..." style="margin-bottom:10px; width:100%;">
-                <button onclick="sendPost()">Yayınla</button>
-            </div>
-            <div id="blog-list"></div>
-        </div>
-
-        <div class="nav">
-            <button onclick="show('chat')">Sohbet</button>
-            <button onclick="show('blog')">Blog</button>
+    <!-- GİRİŞ EKRANI -->
+    <div id="login-screen">
+        <div class="login-card animate-fade">
+            <div class="logo-font">Emirinsta</div>
+            <input type="text" id="join-name" placeholder="Kullanıcı adın">
+            <button class="btn-gold" onclick="joinServer()">Uygulamayı Başlat</button>
+            <p style="margin-top:20px; color:var(--gray); font-size:0.85rem;">Şifre gerektirmez, hemen girin!</p>
         </div>
     </div>
 
+    <!-- ANA APP -->
+    <div id="app" class="hidden">
+        <header>
+            <div class="header-logo">Emirinsta</div>
+            <div style="display:flex; gap:15px; align-items:center;">
+                <button onclick="toggleTheme()" style="background:none; border:none; font-size:1.3rem; cursor:pointer;" id="theme-icon">🌙</button>
+                <div onclick="openUpload()" style="font-size:1.8rem; cursor:pointer;">⊕</div>
+            </div>
+        </header>
+
+        <div class="content">
+            <!-- AKIŞ SAYFASI -->
+            <div id="page-feed">
+                <div class="stories" id="story-line"></div>
+                <div id="feed-list"></div>
+            </div>
+
+            <!-- SOHBET SAYFASI -->
+            <div id="page-chat" class="hidden">
+                <div id="chat-view">
+                    <div class="msgs" id="msg-list"></div>
+                    <div class="chat-bar">
+                        <input type="text" id="chat-input" placeholder="Mesaj yazın...">
+                        <button class="btn-gold" onclick="sendMsg()" style="width:80px;">Gönder</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROFİL SAYFASI -->
+            <div id="page-profile" class="hidden">
+                <div id="profile-view" class="animate-fade">
+                    <img src="https://i.pravatar.cc/150?u=me" class="p-avatar">
+                    <h2 id="prof-name">Kullanıcı</h2>
+                    <div class="p-stats">
+                        <div><b id="count-posts">0</b><span>Gönderi</span></div>
+                        <div><b>1.2K</b><span>Takipçi</span></div>
+                    </div>
+                    <button class="btn-gold" onclick="logout()" style="background:red; margin-top:30px;">Güvenli Çıkış Yap</button>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-bar">
+            <button class="nav-tab active" id="tab-feed" onclick="switchPage('feed')">🏠<span>Akış</span></button>
+            <button class="nav-tab" id="tab-chat" onclick="switchPage('chat')">💬<span>Sohbet</span></button>
+            <button class="nav-tab" id="tab-profile" onclick="switchPage('profile')">👤<span>Profil</span></button>
+        </nav>
+    </div>
+
+    <!-- UPLOAD MODAL -->
+    <div id="upload-modal" class="modal">
+        <div class="modal-body">
+            <h3>Yeni Paylaşım</h3><br>
+            <input type="text" id="post-img" placeholder="Resim linki (Boş da olabilir)">
+            <input type="text" id="post-txt" placeholder="Düşünceni paylaş...">
+            <button class="btn-gold" onclick="publishPost()">Yayınla</button>
+            <button onclick="closeUpload()" style="width:100%; background:none; border:none; margin-top:15px; color:var(--gray);">Kapat</button>
+        </div>
+    </div>
+
+    <!-- FIREBASE & MANTIK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBIK0LHEqw6gEi6fwWER4i6HK9Aoxr4ECk",
@@ -72,89 +166,103 @@
             appId: "1:1054133758624:web:a7ec89a1e9cf350aafb7c5"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const fb = initializeApp(firebaseConfig);
+        const auth = getAuth(fb);
+        const db = getFirestore(fb);
 
-        // UYGULAMAYI BAŞLAT
-        window.startApp = () => {
-            const name = document.getElementById('user-name').value.trim();
-            if(!name) return alert("İsim yazmalısın!");
-            localStorage.setItem('insta_user', name);
-            document.getElementById('login-zone').classList.add('hidden');
-            document.getElementById('app-zone').classList.remove('hidden');
-            loadAll();
+        window.joinServer = async () => {
+            const n = document.getElementById('join-name').value.trim();
+            if(!n) return alert("İsimsiz girilmez!");
+            localStorage.setItem('premium_name', n);
+            await signInAnonymously(auth);
         };
 
-        // OTOMATİK GİRİŞ
-        if(localStorage.getItem('insta_user')) { 
-            document.getElementById('user-name').value = localStorage.getItem('insta_user');
-            window.startApp();
-        }
+        onAuthStateChanged(auth, (u) => {
+            const n = localStorage.getItem('premium_name');
+            if(u && n) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                document.getElementById('prof-name').innerText = "@" + n;
+                startEngines();
+            } else {
+                document.getElementById('login-screen').classList.remove('hidden');
+                document.getElementById('app').classList.add('hidden');
+            }
+        });
 
-        // MESAJ GÖNDER
-        window.sendMsg = async () => {
-            const txt = document.getElementById('chat-input').value;
-            if(!txt) return;
-            try {
-                await addDoc(collection(db, "messages"), {
-                    user: localStorage.getItem('insta_user'),
-                    text: txt,
-                    time: serverTimestamp()
-                });
-                document.getElementById('chat-input').value = '';
-            } catch(e) { alert("HATA: Mesaj veritabanına kaydedilemedi! Kuralları 'true' yaptığından emin ol."); }
-        };
+        function startEngines() {
+            // Hikayeler
+            const row = document.getElementById('story-line');
+            row.innerHTML = ["Sen", "emre_v", "merve.3", "baran_x", "ayse.tech"].map((x, i) => `
+                <div class="s-box"><div class="s-ring"><img src="https://i.pravatar.cc/150?u=${i}"></div><p>${x}</p></div>
+            `).join('');
 
-        // BLOG PAYLAŞ
-        window.sendPost = async () => {
-            const img = document.getElementById('blog-img').value;
-            const txt = document.getElementById('blog-txt').value;
-            if(!txt) return alert("Yazı yazmalısın!");
-            try {
-                await addDoc(collection(db, "posts"), {
-                    user: localStorage.getItem('insta_user'),
-                    img: img,
-                    txt: txt,
-                    time: serverTimestamp()
-                });
-                document.getElementById('blog-img').value = ''; document.getElementById('blog-txt').value = '';
-                document.getElementById('post-modal').classList.add('hidden');
-            } catch(e) { alert("HATA: Blog kaydedilemedi!"); }
-        };
-
-        // VERİLERİ ÇEK
-        function loadAll() {
-            // Canlı Sohbet
-            onSnapshot(query(collection(db, "messages"), orderBy("time", "asc")), (snap) => {
-                const box = document.getElementById('chat-logs');
-                box.innerHTML = '';
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    box.innerHTML += `<div class="msg"><b>${d.user}:</b> ${d.text}</div>`;
-                });
-                box.scrollTop = box.scrollHeight;
-            });
-            // Canlı Blog
+            // Akış Dinle
             onSnapshot(query(collection(db, "posts"), orderBy("time", "desc")), (snap) => {
-                const list = document.getElementById('blog-list');
-                list.innerHTML = '';
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    list.innerHTML += `
-                        <div class="post-card">
-                            ${d.img ? `<img src="${d.img}">` : ''}
-                            <div style="padding:10px;"><b>${d.user}:</b> ${d.txt}</div>
-                        </div>`;
+                const fl = document.getElementById('feed-list'); fl.innerHTML = '';
+                document.getElementById('count-posts').innerText = snap.size;
+                snap.forEach(d => {
+                    const v = d.data();
+                    fl.innerHTML += `
+                        <div class="post animate-fade">
+                            <div class="p-head"><img src="https://i.pravatar.cc/150?u=${v.user}"> ${v.user}</div>
+                            ${v.img ? `<div class="p-img"><img src="${v.img}"></div>` : ''}
+                            <div class="p-acts">❤️ 💬 🚀</div>
+                            <div class="p-info"><b>${v.user}</b> ${v.txt}</div>
+                        </div>
+                    `;
                 });
+            });
+
+            // Mesajlar Dinle
+            onSnapshot(query(collection(db, "messages"), orderBy("time", "asc"), limit(50)), (snap) => {
+                const ml = document.getElementById('msg-list'); ml.innerHTML = '';
+                snap.forEach(d => {
+                    const m = d.data();
+                    const isMe = m.user === localStorage.getItem('premium_name');
+                    ml.innerHTML += `
+                        <div class="bubble ${isMe?'me':'other'}">
+                            <small>${m.user}</small>${m.txt}
+                        </div>
+                    `;
+                });
+                ml.scrollTop = ml.scrollHeight;
             });
         }
 
-        // TAB GEÇİŞİ
-        window.show = (tab) => {
-            document.getElementById('chat-tab').classList.add('hidden');
-            document.getElementById('blog-tab').classList.add('hidden');
-            document.getElementById(tab + '-tab').classList.remove('hidden');
+        window.sendMsg = () => {
+            const t = document.getElementById('chat-input').value; if(!t) return;
+            addDoc(collection(db, "messages"), { user: localStorage.getItem('premium_name'), txt: t, time: serverTimestamp() });
+            document.getElementById('chat-input').value = '';
         };
+
+        window.publishPost = () => {
+            const i = document.getElementById('post-img').value;
+            const t = document.getElementById('post-txt').value;
+            if(!t) return alert("Bişeyler yaz bee!");
+            addDoc(collection(db, "posts"), { user: localStorage.getItem('premium_name'), img: i, txt: t, time: serverTimestamp() });
+            closeUpload();
+        };
+
+        window.switchPage = (p) => {
+            ["feed", "chat", "profile"].forEach(x => {
+                document.getElementById('page-'+x).classList.add('hidden');
+                document.getElementById('tab-'+x).classList.remove('active');
+            });
+            document.getElementById('page-'+p).classList.remove('hidden');
+            document.getElementById('tab-'+p).classList.add('active');
+        };
+
+        window.toggleTheme = () => {
+            const body = document.body;
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('theme-icon').innerText = isDark ? '🌙' : '☀️';
+        };
+
+        window.openUpload = () => document.getElementById('upload-modal').style.display = 'flex';
+        window.closeUpload = () => document.getElementById('upload-modal').style.display = 'none';
+        window.logout = () => { if(confirm("Çıkış yap?")) { signOut(auth); localStorage.removeItem('premium_name'); } };
     </script>
 </body>
 </html>
